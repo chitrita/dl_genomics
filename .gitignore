@@ -227,7 +227,6 @@ TSWLatexianTemp*
 .Rhistory
 
 *.vscode/
-
 __pycache__/
-
 data/
+.ipynb_checkpoints/
