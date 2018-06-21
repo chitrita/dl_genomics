@@ -180,7 +180,7 @@ if __name__ == '__main__':
     parser.add_argument("--lstm", type=str2bool, default='true')
     parser.add_argument("--extractor", type=str, default="sae", help="options: sae, danq")
     parser.add_argument("--stacks", type=int, default=1)
-    parser.add_argument("--intermediate_size", type=int, default=512)
+    parser.add_argument("--intermediate_size", type=int, default=256)
 
     args = parser.parse_args()
 

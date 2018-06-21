@@ -103,17 +103,24 @@ class SAE(FeatureExtractor, nn.Module):
         super(SAE, self).__init__()
 
         self.encoder = nn.Sequential(
-            nn.Conv1d(in_channels, 2 * intermediate_size, kernel_size=filter_length),
+            nn.Conv1d(in_channels, intermediate_size // 4, kernel_size=filter_length, padding=1),
             nn.ReLU(inplace=True),
             nn.MaxPool1d(kernel_size=pool_length, stride=pool_stride),
-            nn.Conv1d(2 * intermediate_size, intermediate_size, kernel_size=filter_length),
-            nn.ReLU()
+            nn.Conv1d(intermediate_size // 4, intermediate_size // 2, kernel_size=filter_length),
+            nn.ReLU(inplace=True),
+            nn.MaxPool1d(kernel_size=pool_length, stride=pool_stride),
+            nn.Conv1d(intermediate_size // 2, intermediate_size, kernel_size=filter_length),
+            nn.ReLU(inplace=True)
         )
 
         self.decoder = nn.Sequential(
-            nn.ConvTranspose1d(intermediate_size, 2 * intermediate_size, kernel_size=filter_length),
+            nn.ConvTranspose1d(intermediate_size, intermediate_size // 2, kernel_size=filter_length,
+                               stride=pool_stride),
             nn.ReLU(inplace=True),
-            nn.ConvTranspose1d(2 * intermediate_size, in_channels, kernel_size=filter_length),
+            nn.ConvTranspose1d(intermediate_size // 2, intermediate_size // 4, kernel_size=filter_length,
+                               stride=pool_stride),
+            nn.ReLU(inplace=True),
+            nn.ConvTranspose1d(intermediate_size // 4, in_channels, kernel_size=filter_length),
             nn.ReLU(inplace=True)
         )
 
