@@ -14,6 +14,7 @@ from models.regressor import Regressor
 
 
 random.seed(0)
+np.random.seed(0)
 torch.manual_seed(0)
 
 
@@ -91,7 +92,12 @@ def main(args):
                 start = time.time()
 
                 for batch, _ in dataloaders["train"]:
-                    encoded, decoded = extractor(batch)
+                    batch = Variable(batch)
+
+                    if cuda:
+                        batch = batch.cuda()
+
+                    _, decoded = extractor(batch)
 
                     loss = mse(decoded, batch)
                     loss.backward()
@@ -172,7 +178,7 @@ if __name__ == '__main__':
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--lstm", type=str2bool, default='true')
-    parser.add_argument("--extractor", type=str, default="sae")
+    parser.add_argument("--extractor", type=str, default="sae", help="options: sae, danq")
     parser.add_argument("--stacks", type=int, default=1)
     parser.add_argument("--intermediate_size", type=int, default=512)
 
