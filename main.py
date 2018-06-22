@@ -91,6 +91,7 @@ def main(args):
 
                 start = time.time()
 
+                losses = []
                 for batch, _ in dataloaders["train"]:
                     batch = Variable(batch)
 
@@ -103,8 +104,10 @@ def main(args):
                     loss.backward()
                     adam.step()
 
-                    print("Epoch {}: AE Training Loss: {:0.4f}, {:0.4f}s"
-                          .format(epoch, loss.item(), time.time() - start))
+                    losses.append(loss.item())
+
+                print("Epoch {}: AE Training Loss: {:0.4f}, {:0.4f}s"
+                      .format(epoch, np.mean(losses), time.time() - start))
 
             torch.save(extractor.state_dict(), "sae.pt")
 
